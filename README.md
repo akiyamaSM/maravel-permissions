@@ -1,7 +1,7 @@
 # Grant Users the superpower of Marvel characters
 
 
-## Installation
+## Download
 
 ```bash
 composer require inani/maravel-permissions
