@@ -4,7 +4,7 @@
 ## Installation
 
 ```bash
-composer require inani/maravel-permission
+composer require inani/maravel-permissions
 ```
 
 ## Installation
