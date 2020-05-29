@@ -99,7 +99,7 @@ $ability = Ability::create([
 
 // Create a Marvel
 $marvel = Marvel::create([
-    'name' => 'Cristiano Ronalo'
+    'name' => 'Cristiano Ronaldo'
 ]);
 
 // Grant the ability
