@@ -19,18 +19,26 @@ Then include the service provider inside `config/app.php`. (You can skipp it if 
     ...
 ];
 ```
-Publish migrations, and migrate
+Publish resources, and migrate
 
 ```bash
 php artisan vendor:publish
 ```
 
-You can edit `2020_05_27_221346_add_marvel_id_to_users` migration to link it with the correct user table
+
+PS : You can edit `2020_05_27_221346_add_marvel_id_to_users` migration to link it with the correct user table
 
 And then migrate
 
 ```bash
 php artisan migrate
+```
+You will have a `MarvelCan` Middleware, you can tweak it to adapt to your needs and use it such as
+
+```php
+// Check if he owns one of those two abilities or both
+Route::middleware(['auth:api', 'marvelCan:create_post,edit_post'])
+      ->post('/posts', 'PostsController@store');
 ```
 ## Setup a Model
 
@@ -55,8 +63,8 @@ Because every user deserves to be a hero, The Maravel API is based on the Marvel
 // Having a user
 $user = User::first();
 
-// Create a new marvel
-$storm = Spectre::create('storm')->havingPower([
+// Create a new marvel, description is not mandotary
+$storm = Spectre::create('storm', 'A Superhero that can do crazy things')->havingPower([
 	'weather_manipulation',
   	'earth_telepathy',
   	'high_sens',
@@ -94,12 +102,14 @@ You can also manage the instances directly
 
 // Create Ability
 $ability = Ability::create([
-    'super_power' => 'speed'
+    'super_power' => 'speed',
+    'description' => 'Run faster than anyone else'
 ]);
 
 // Create a Marvel
 $marvel = Marvel::create([
-    'name' => 'Cristiano Ronaldo'
+    'name' => 'Cristiano Ronaldo',
+    'description' => 'A super footballer'
 ]);
 
 // Grant the ability
