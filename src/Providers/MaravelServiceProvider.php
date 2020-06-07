@@ -32,5 +32,11 @@ class MaravelServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/../database/' => database_path('migrations')
         ], 'migrations');
+
+        $this->publishes(
+            [
+                __DIR__ . '/../Http/Middleware/MarvelCan.stub' => app_path('Http/Middleware/MarvelCan.php')
+            ], 'middleware'
+        );
     }
 }

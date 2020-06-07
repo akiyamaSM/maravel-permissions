@@ -4,8 +4,6 @@
 namespace Inani\Maravel;
 
 
-use Inani\Maravel;
-
 class Cerebro
 {
     /**

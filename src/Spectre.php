@@ -13,6 +13,8 @@ class Spectre
      */
     protected $marvel;
 
+    protected $description;
+
     private function __construct()
     {
     }
@@ -21,13 +23,14 @@ class Spectre
      * Create a new Marvel
      *
      * @param $name
+     * @param null $description
      * @return Spectre
      */
-    public static function create($name)
+    public static function create($name, $description = null)
     {
         $instance = new self();
         $instance->name = $name;
-
+        $instance->description = $description;
         return $instance;
     }
 
@@ -44,7 +47,7 @@ class Spectre
             throw new \Exception("Marvel name not provided");
         }
 
-        return $this->create_marvel($this->name, $powers);
+        return $this->create_marvel($this->name, $powers, $this->description);
     }
 
     /**
@@ -52,13 +55,15 @@ class Spectre
      *
      * @param $name
      * @param $abilities
+     * @param $description
      * @return Marvel
      */
-    protected function create_marvel($name, $abilities)
+    protected function create_marvel($name, $abilities, $description)
     {
         $abilities = collect($abilities)->map(function ($ability) {
             $ability = Ability::firstOrCreate([
-                'super_power' => $ability
+                'super_power' => $ability,
+                'description' => $this->description
             ]);
             return $ability->id;
         })->toArray();
@@ -136,6 +141,7 @@ class Spectre
     {
         $this->name = '';
         $this->marvel = null;
+        $this->description = null;
 
         return $this;
     }
