@@ -27,15 +27,15 @@ class Cerebro
     /**
      * check if can do
      *
-     * @param $super_power
+     * @param $super_powers_id
      * @return mixed
      */
-    public function owns($super_power)
+    public function owns($super_powers_id)
     {
-        $super_power = is_array($super_power) ? $super_power : [$super_power];
+        $super_powers_id = is_array($super_powers_id) ? $super_powers_id : [$super_powers_id];
 
-        return $this->hero->marvel()->whereHas('abilities', function ($query) use($super_power) {
-            return $query->whereIn('super_power', $super_power);
+        return $this->hero->marvel()->whereHas('abilities', function ($query) use($super_powers_id) {
+            return $query->whereIn('id', $super_powers_id);
         })->exists();
     }
 
