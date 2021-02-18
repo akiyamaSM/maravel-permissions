@@ -15,10 +15,6 @@ class Spectre
 
     protected $description;
 
-    private function __construct()
-    {
-    }
-
     /**
      * Create a new Marvel
      *
@@ -60,10 +56,14 @@ class Spectre
      */
     protected function create_marvel($name, $abilities, $description)
     {
-        $abilities = collect($abilities)->map(function ($ability) {
+        $abilities = collect($abilities)->map(function ($ability) use($description) {
+            $entity = isset($ability['entity']) ? $ability['entity'] : null;
             $ability = Ability::firstOrCreate([
-                'super_power' => $ability,
-                'description' => $this->description
+                'super_power' => $ability['name'],
+                'action' => $ability['action'],
+                'entity' => $entity,
+                'is_entity' => !is_null($entity),
+                'description' => $description
             ]);
             return $ability->id;
         })->toArray();
@@ -95,7 +95,7 @@ class Spectre
     /**
      * Grant a marvel superpower
      *
-     * @param $ability
+     * @param $ability int|array
      * @return Marvel
      * @throws \Exception
      */
@@ -104,10 +104,16 @@ class Spectre
         if(empty($this->marvel)){
             throw new \Exception("Marvel name not provided");
         }
-
-        $ability = Ability::firstOrCreate([
-            'super_power' => $ability
-        ]);
+        if(is_array($ability)){
+            $entity = isset($ability['entity']) ? $ability['entity'] : null;
+            $ability = Ability::create([
+                'super_power' => $ability['super_power'],
+                'action' => $ability['action'],
+                'entity' => $entity,
+                'is_entity' => !is_null($entity),
+                'description' => $ability['description']
+            ]);
+        }
 
         return $this->marvel->grant($ability);
     }
@@ -115,7 +121,7 @@ class Spectre
     /**
      * Grant a marvel superpower
      *
-     * @param $ability
+     * @param $ability Ability|integer
      * @return Marvel
      * @throws \Exception
      */
@@ -124,16 +130,11 @@ class Spectre
         if(empty($this->marvel)){
             throw new \Exception("Marvel name not provided");
         }
-
-        $ability = Ability::firstOrCreate([
-            'super_power' => $ability
-        ]);
-
         return $this->marvel->takeOff($ability);
     }
 
     /**
-     * Reboot the cerebro
+     * Reboot the Cerebro
      *
      * @return $this
      */
