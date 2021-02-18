@@ -54,26 +54,25 @@ class Spectre
      * @param $description
      * @return Marvel
      */
-    protected function create_marvel($name, $abilities, $description)
+    protected function create_marvel($name, $ability, $description)
     {
-        $abilities = collect($abilities)->map(function ($ability) use($description) {
-            $entity = isset($ability['entity']) ? $ability['entity'] : null;
-            $ability = Ability::firstOrCreate([
-                'super_power' => $ability['name'],
-                'action' => $ability['action'],
-                'entity' => $entity,
-                'is_entity' => !is_null($entity),
-                'description' => $description
-            ]);
-            return $ability->id;
-        })->toArray();
+        $entity = isset($ability['entity']) ? $ability['entity'] : null;
+        $ability = Ability::firstOrCreate([
+            'super_power' => $ability['name'],
+            'action' => $ability['action'],
+            'entity' => $entity,
+            'is_entity' => !is_null($entity),
+            'description' => $ability['description']
+        ]);
 
         /** @var Marvel $marvel */
         $marvel = Marvel::firstOrCreate([
-            'name' => $name
+            'name' => $name,
+        ], [
+            'description' => $description
         ]);
 
-        $marvel->keep($abilities);
+        $marvel->keep([$ability->id]);
 
         return $marvel;
     }
@@ -107,7 +106,7 @@ class Spectre
         if(is_array($ability)){
             $entity = isset($ability['entity']) ? $ability['entity'] : null;
             $ability = Ability::create([
-                'super_power' => $ability['super_power'],
+                'super_power' => $ability['name'],
                 'action' => $ability['action'],
                 'entity' => $entity,
                 'is_entity' => !is_null($entity),

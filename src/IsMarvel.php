@@ -20,7 +20,7 @@ trait IsMarvel
      *
      * @return mixed
      */
-    public function cerebro()
+    public function roleManager()
     {
         /** @var Cerebro $conan */
         $conan = resolve(Cerebro::class);

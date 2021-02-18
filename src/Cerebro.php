@@ -60,7 +60,7 @@ class Cerebro
     public function blessWith(Marvel $marvel)
     {
         $this->hero->marvel()->associate($marvel);
-
+        $this->hero->save();
         return $this;
     }
 
@@ -72,7 +72,7 @@ class Cerebro
     public function humanize()
     {
         $this->hero->marvel()->dissociate();
-
+        $this->hero->save();
         return $this;
     }
 }
