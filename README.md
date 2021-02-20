@@ -50,7 +50,7 @@ And then migrate
 
 ```bash
 php artisan migrate
-```g
+```
 ## Setup a Model
 
 To setup the user model, all you have to do is add (and import) the `IsMarvel` trait.
