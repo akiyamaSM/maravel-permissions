@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateAbilityMarvelTable extends Migration
+class CreateAbilityRoleTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,14 @@ class CreateAbilityMarvelTable extends Migration
      */
     public function up()
     {
-        Schema::create('ability_marvel', function (Blueprint $table) {
+        Schema::create('ability_role', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('ability_id');
-            $table->unsignedBigInteger('marvel_id');
+            $table->unsignedBigInteger('role_id');
             $table->timestamps();
 
-            $table->foreign('ability_id')->references('id')->on('abilities');
-            $table->foreign('marvel_id')->references('id')->on('marvels');
+            $table->foreign('ability_id')->references('id')->on('maravel_abilities');
+            $table->foreign('role_id')->references('id')->on('maravel_roles');
         });
     }
 
@@ -31,6 +31,6 @@ class CreateAbilityMarvelTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('ability_marvel');
+        Schema::dropIfExists('ability_role');
     }
 }

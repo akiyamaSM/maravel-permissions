@@ -8,13 +8,14 @@ class Ability extends Model
 {
     protected $guarded = [];
 
+    protected $table = 'maravel_abilities';
     /**
-     * Marvels
+     * Roles
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function marvels()
+    public function roles()
     {
-        return $this->belongsToMany(Marvel::class);
+        return $this->belongsToMany(Role::class);
     }
 }

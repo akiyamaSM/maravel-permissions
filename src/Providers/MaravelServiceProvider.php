@@ -4,7 +4,7 @@ namespace Inani\Maravel\Providers;
 
 
 use Illuminate\Support\ServiceProvider;
-use Inani\Maravel\Cerebro;
+use Inani\Maravel\RoleManager;
 
 class MaravelServiceProvider extends ServiceProvider
 {
@@ -15,8 +15,8 @@ class MaravelServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->singleton(Cerebro::class, function ($app) {
-            return new Cerebro();
+        $this->app->singleton(RoleManager::class, function ($app) {
+            return new RoleManager();
         });
     }
 

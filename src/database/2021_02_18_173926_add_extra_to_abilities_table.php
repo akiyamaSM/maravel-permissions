@@ -13,7 +13,7 @@ class AddExtraToAbilitiesTable extends Migration
      */
     public function up()
     {
-        Schema::table('abilities', function (Blueprint $table) {
+        Schema::table('maravel_abilities', function (Blueprint $table) {
             $actions = collect(config('maravels.actions'));
             $entities = collect(config('maravels.entities'))->map(function ($entity) {
                 return (string)  \Illuminate\Support\Str::of($entity)->replace("\\", "\\\\");

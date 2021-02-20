@@ -4,18 +4,18 @@
 namespace Inani\Maravel;
 
 
-class Cerebro
+class RoleManager
 {
     /**
-     * @var IsMarvel
+     * @var HasRole
      */
     protected $hero;
 
     /**
      * Scan the user
      *
-     * @param IsMarvel $hero
-     * @return Cerebro
+     * @param HasRole $hero
+     * @return RoleManager
      */
     public function scan($hero)
     {
@@ -34,7 +34,7 @@ class Cerebro
     {
         $super_powers_id = is_array($super_powers_id) ? $super_powers_id : [$super_powers_id];
 
-        return $this->hero->marvel()->whereHas('abilities', function ($query) use($super_powers_id) {
+        return $this->hero->role()->whereHas('abilities', function ($query) use($super_powers_id) {
             return $query->whereIn('id', $super_powers_id);
         })->exists();
     }
@@ -52,14 +52,14 @@ class Cerebro
     }
 
     /**
-     * Give a user the marvel
+     * Give a user the role
      *
-     * @param Marvel $marvel
+     * @param Role $role
      * @return $this
      */
-    public function blessWith(Marvel $marvel)
+    public function blessWith(Role $role)
     {
-        $this->hero->marvel()->associate($marvel);
+        $this->hero->role()->associate($role);
         $this->hero->save();
         return $this;
     }
@@ -71,7 +71,7 @@ class Cerebro
      */
     public function humanize()
     {
-        $this->hero->marvel()->dissociate();
+        $this->hero->role()->dissociate();
         $this->hero->save();
         return $this;
     }

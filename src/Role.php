@@ -4,10 +4,11 @@ namespace Inani\Maravel;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Marvel extends Model
+class Role extends Model
 {
     protected $guarded = [];
 
+    protected $table = 'maravel_roles';
     /**
      * The abilities
      *
@@ -22,7 +23,7 @@ class Marvel extends Model
      * Keep only those abilities
      *
      * @param array $abilities
-     * @return Marvel
+     * @return Role
      */
     public function keep(array $abilities)
     {
@@ -32,7 +33,7 @@ class Marvel extends Model
     }
 
     /**
-     * Take of the ability from the marvel
+     * Take of the ability from the role
      *
      * @param $ability Ability|integer
      * @return $this
@@ -47,7 +48,7 @@ class Marvel extends Model
     }
 
     /**
-     * Grant the marvel an ability
+     * Grant the role an ability
      *
      * @param $ability Ability|integer
      * @return $this

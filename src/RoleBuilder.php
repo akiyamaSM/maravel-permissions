@@ -4,14 +4,14 @@
 namespace Inani\Maravel;
 
 
-class Spectre
+class RoleBuilder
 {
     protected $name;
 
     /**
-     * @var Marvel
+     * @var Role
      */
-    protected $marvel;
+    protected $role;
 
     protected $description;
 
@@ -20,7 +20,7 @@ class Spectre
      *
      * @param $name
      * @param null $description
-     * @return Spectre
+     * @return RoleBuilder
      */
     public static function create($name, $description = null)
     {
@@ -31,10 +31,10 @@ class Spectre
     }
 
     /**
-     * Create marvel with powers
+     * Create role with powers
      *
      * @param array $powers
-     * @return Marvel
+     * @return Role
      * @throws \Exception
      */
     public function havingPower(array  $powers)
@@ -43,18 +43,18 @@ class Spectre
             throw new \Exception("Marvel name not provided");
         }
 
-        return $this->create_marvel($this->name, $powers, $this->description);
+        return $this->create_role($this->name, $powers, $this->description);
     }
 
     /**
-     * Create New marvel
+     * Create New role
      *
      * @param $name
      * @param $abilities
      * @param $description
-     * @return Marvel
+     * @return Role
      */
-    protected function create_marvel($name, $ability, $description)
+    protected function create_role($name, $ability, $description)
     {
         $entity = isset($ability['entity']) ? $ability['entity'] : null;
         $ability = Ability::firstOrCreate([
@@ -65,42 +65,42 @@ class Spectre
             'description' => $ability['description']
         ]);
 
-        /** @var Marvel $marvel */
-        $marvel = Marvel::firstOrCreate([
+        /** @var Role $role */
+        $role = Role::firstOrCreate([
             'name' => $name,
         ], [
             'description' => $description
         ]);
 
-        $marvel->keep([$ability->id]);
+        $role->keep([$ability->id]);
 
-        return $marvel;
+        return $role;
     }
 
     /**
-     * Select a marvel
+     * Select a role
      *
-     * @param Marvel $marvel
-     * @return Spectre
+     * @param Role $role
+     * @return RoleBuilder
      */
-    public static function of(Marvel $marvel)
+    public static function of(Role $role)
     {
         $instance = new self();
-        $instance->marvel = $marvel;
+        $instance->role = $role;
 
         return $instance;
     }
 
     /**
-     * Grant a marvel superpower
+     * Grant a role superpower
      *
      * @param $ability int|array
-     * @return Marvel
+     * @return Role
      * @throws \Exception
      */
     public function grant($ability)
     {
-        if(empty($this->marvel)){
+        if(empty($this->role)){
             throw new \Exception("Marvel name not provided");
         }
         if(is_array($ability)){
@@ -114,22 +114,22 @@ class Spectre
             ]);
         }
 
-        return $this->marvel->grant($ability);
+        return $this->role->grant($ability);
     }
 
     /**
-     * Grant a marvel superpower
+     * Grant a role superpower
      *
      * @param $ability Ability|integer
-     * @return Marvel
+     * @return Role
      * @throws \Exception
      */
     public function takeOff($ability)
     {
-        if(empty($this->marvel)){
+        if(empty($this->role)){
             throw new \Exception("Marvel name not provided");
         }
-        return $this->marvel->takeOff($ability);
+        return $this->role->takeOff($ability);
     }
 
     /**
@@ -140,7 +140,7 @@ class Spectre
     public function reboot()
     {
         $this->name = '';
-        $this->marvel = null;
+        $this->role = null;
         $this->description = null;
 
         return $this;

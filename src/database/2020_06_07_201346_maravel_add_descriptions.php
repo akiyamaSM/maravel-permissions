@@ -14,10 +14,10 @@ class MaravelAddDescriptions extends Migration
      */
     public function up()
     {
-        Schema::table('marvels', function (Blueprint $table) {
+        Schema::table('maravel_roles', function (Blueprint $table) {
             $table->text('description')->nullable();
         });
-        Schema::table('abilities', function (Blueprint $table) {
+        Schema::table('maravel_abilities', function (Blueprint $table) {
             $table->text('description')->nullable();
         });
     }

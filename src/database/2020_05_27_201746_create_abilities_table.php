@@ -13,7 +13,7 @@ class CreateAbilitiesTable extends Migration
      */
     public function up()
     {
-        Schema::create('abilities', function (Blueprint $table) {
+        Schema::create('maravel_abilities', function (Blueprint $table) {
             $table->id();
             $table->string('super_power')->unique();
             $table->timestamps();

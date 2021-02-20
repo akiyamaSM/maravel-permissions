@@ -26,8 +26,26 @@ php artisan vendor:publish
 ```
 
 
-PS : You can edit `2020_05_27_221346_add_marvel_id_to_users` migration to link it with the correct user table
+PS : You can edit `2020_05_27_221346_add_role_id_to_users` migration to link it with the correct user table
 
+Edit the `config/maravels.php` with the correct values
+
+```php
+<?php
+
+return [
+    // Define the list of actions to be checked against
+    'actions' => [
+        'add', 'delete', 'create', 'search', 'update'
+    ],
+
+    // define the class path for the entities
+    'entities' => [
+        \App\Models\User::class,
+    ],
+];
+
+```
 And then migrate
 
 ```bash
@@ -37,7 +55,7 @@ You will have a `MarvelCan` Middleware, you can tweak it to adapt to your needs 
 
 ```php
 // Check if he owns one of those two abilities or both
-Route::middleware(['auth:api', 'marvelCan:create_post,edit_post'])
+Route::middleware(['auth:api', 'roleCan:create_post,edit_post'])
       ->post('/posts', 'PostsController@store');
 ```
 ## Setup a Model
@@ -45,55 +63,60 @@ Route::middleware(['auth:api', 'marvelCan:create_post,edit_post'])
 To setup the user model, all you have to do is add (and import) the `IsMarvel` trait.
 
 ```php
-use Inani\Maravel\IsMarvel;
+use Inani\Maravel\HasRole;
 
 class User extends Model
 {
-    use IsMarvel;
+    use HasRole;
     ...
 }
 ```
 
 ## Usage
 
-## All roles are marvel and permissions are powers
+## All roles are role and permissions are powers
 Because every user deserves to be a hero, The Maravel API is based on the Marvel Jargon, and here are how it can be used 
 
 ```php
 // Having a user
 $user = User::first();
 
-// Create a new marvel, description is not mandotary
-$storm = Spectre::create('storm', 'A Superhero that can do crazy things')->havingPower([
-	'weather_manipulation',
-  	'earth_telepathy',
-  	'high_sens',
-  	'see_the_future'
-]);
+// Create a new role, description is not mandotary
+$userManager = RoleBuilder::create('User Manager', 'The role to manage users')
+                ->havingPower([
+                   'name' => 'can_update',
+                   'description' => 'The abilitiy to update a user',
+                   'action' => 'update',
+                   'entity' => \App\Models\User::class,
+               ]);
 
 // we can grant a power to it
-$storm = Spectre::of($storm)->grant('flying');
+$userManager = RoleBuilder::of($userManager)
+                        ->grant([
+                             'name' => 'can_create',
+                             'description' => 'The abilitiy to create a user',
+                             'action' => 'create',
+                             'entity' => \App\Models\User::class,
+                         ]);
 
 // Or take it off
-$storm = Spectre::of($storm)->takeOff('see_the_future');
+$ability = Ability::first();
+
+$storm = RoleBuilder::of($userManager)->takeOff($ability);
 
 
-// bless the user with the abilities of the marvel
-$user->cerebro()->blessWith($storm);
+// bless the user with the abilities of the role
+$user->roleManager()->blessWith($storm);
 
 
 // check if it has the ability
-$user->cerebro()->owns('weather_manipulation');
+$user->roleManager()->owns($ability);
 
 // check if it has one of the provided abilities
-$user->cerebro()->ownsOneOf([
-	'earth_telepathy',
-  	'flying',
-  	'x-ray',
-]);
+$user->roleManager()->ownsOneOf([$ability, $anOtherAbility]);
 
 // make it human again (remove its role)
-$user->cerebro()->humanize();
+$user->roleManager()->humanize();
 
 ```
 
@@ -102,28 +125,32 @@ You can also manage the instances directly
 
 // Create Ability
 $ability = Ability::create([
-    'super_power' => 'speed',
-    'description' => 'Run faster than anyone else'
+    'name' => 'post_write',
+    'description' => 'Abitlity to create new Posts',
+    'action' => 'add',
+    'entity' => \App\Models\Post::class,
 ]);
 
 // Create a Marvel
-$marvel = Marvel::create([
-    'name' => 'Cristiano Ronaldo',
-    'description' => 'A super footballer'
+$writer = Role::create([
+    'name' => 'Webmaster',
+    'description' => 'A Role that allows you create new posts'
 ]);
 
 // Grant the ability
-$marvel->grant($ability);
+$writer->grant($ability);
 
 // remove a certain ability
-$marvel->takeOff($ability);
+$writer->takeOff($ability);
 
 // remove all and keep only those
-$marvel->keep($abilities);
+$abilities = [1, 2]; // or the models
+$writer->keep($abilities);
 
 // bless it to our user
+$user = \App\Models\User::first();
 
-$user->cerebro()->blessWith($marvel);
+$user->roleManager()->blessWith($writer);
 ```
 
 ## Am I missing something?
