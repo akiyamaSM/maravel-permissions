@@ -50,14 +50,7 @@ And then migrate
 
 ```bash
 php artisan migrate
-```
-You will have a `MarvelCan` Middleware, you can tweak it to adapt to your needs and use it such as
-
-```php
-// Check if he owns one of those two abilities or both
-Route::middleware(['auth:api', 'roleCan:create_post,edit_post'])
-      ->post('/posts', 'PostsController@store');
-```
+```g
 ## Setup a Model
 
 To setup the user model, all you have to do is add (and import) the `IsMarvel` trait.
